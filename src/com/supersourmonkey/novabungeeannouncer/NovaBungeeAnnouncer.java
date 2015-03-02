@@ -155,7 +155,16 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 			System.out.println(s.getValue().getRawMap().toString());
 			System.out.println(s.getValue().get("message"));
 			MessageMap serverConfig = s.getValue();
-			ScheduledTask task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName), serverConfig.offset, serverConfig.delay, TimeUnit.SECONDS);
+			//String type = serverConfig.type;
+			ScheduledTask task;
+			if (serverConfig.type.equals("actionbar")) {
+				
+			    int seconds = serverConfig.seconds;
+			     task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName, seconds), serverConfig.offset, serverConfig.delay, TimeUnit.SECONDS);
+			}
+			else {
+				 task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName, 0), serverConfig.offset, serverConfig.delay, TimeUnit.SECONDS);
+			}
 			System.out.println("New task scheduled with offset " + serverConfig.offset + " and delay " + serverConfig.delay);
 			tasks.add(task);
 			if(config.order.equals("random"))

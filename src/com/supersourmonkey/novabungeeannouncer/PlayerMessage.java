@@ -80,11 +80,9 @@ public class PlayerMessage {
 		else if (type.equals("actionbar")){
 			player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(textBuilder(message)));
 		}
-		else if (type.equals("jsonactionbar")){
-			player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-		}
 	}
 	
+
 	public static void announceAnnouncement(Announcement toSay, String serverName, ArrayList<String> servers, String permission){
 		if(serverName.equals("global")||servers!=null&&servers.contains("global")){
 			for(ProxiedPlayer p : ProxyServer.getInstance().getPlayers()){
