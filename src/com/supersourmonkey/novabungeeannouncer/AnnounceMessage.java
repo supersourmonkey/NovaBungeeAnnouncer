@@ -43,17 +43,25 @@ public class AnnounceMessage implements Runnable{
 			//MessageMap serverConfig = s.getValue();
 			//serverConfig.seconds;
 			Announcement toSay = server.announcements.get(nextAnnounce);
-			int time = 0;
-			while ( time <= seconds) {
-				PlayerMessage.announceAnnouncement(toSay, serverName, server.servers, server.permission);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			
+			if (toSay.type.equals("actionbar")) {
+				int time = 0;
+				while ( time <= seconds) {
+					PlayerMessage.announceAnnouncement(toSay, serverName, server.servers, server.permission);
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					time++;
 				}
-				time++;
 			}
+			
+			else {
+				PlayerMessage.announceAnnouncement(toSay, serverName, server.servers, server.permission);
+			}
+			
 			//PlayerMessage.announceAnnouncement(toSay, serverName, server.servers, server.permission);
 			nextAnnounce++;
 		}

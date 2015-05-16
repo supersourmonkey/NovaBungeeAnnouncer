@@ -12,6 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -154,9 +155,11 @@ public class PlayerMessage {
 		}
 	}
 	
-	public String textBuilder(String input){
+	public BaseComponent[] textBuilder(String input){
 		input = replaceValues(input);
-		String builder = "";
+		//BaseComponent[] builder = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',input));
+		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',input));
+		/*String builder = "";
 		for(int i = 0; i < input.length(); i++){
 			if(input.charAt(i)!='&')
 				builder+=input.charAt(i);
@@ -177,7 +180,7 @@ public class PlayerMessage {
 			}
 			first = false;
 		}
-		return builder;
+		return builder;*/
 	}
 	
 	public String replaceValues(String input){
