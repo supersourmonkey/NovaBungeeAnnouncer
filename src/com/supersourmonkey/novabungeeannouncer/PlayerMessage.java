@@ -132,10 +132,6 @@ public class PlayerMessage {
 	public void checkSendMessage(){
 		if(permission!=null && permission.length()>0){
 			
-			if (player == null) {
-				System.out.println("fic");
-			}
-			
 			if(!NovaBungeeAnnouncer.perms.containsKey(player.getName())){
 				NovaBungeeAnnouncer.perms.put(player.getName(), new ArrayList<String>());
 				NovaBungeeAnnouncer.instance.getPerms(player.getName(), permission);
@@ -161,9 +157,14 @@ public class PlayerMessage {
 	}
 	
 	public BaseComponent[] textBuilder(String input){
+		
 		input = replaceValues(input);
-		//BaseComponent[] builder = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',input));
+		
 		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',input));
+		
+		//Removed OldBuilder because it's crappy and did not work for complex ActionBars.
+		//Included for historical reasons
+		
 		/*String builder = "";
 		for(int i = 0; i < input.length(); i++){
 			if(input.charAt(i)!='&')
