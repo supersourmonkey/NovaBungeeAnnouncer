@@ -131,6 +131,11 @@ public class PlayerMessage {
 
 	public void checkSendMessage(){
 		if(permission!=null && permission.length()>0){
+			
+			if (player == null) {
+				System.out.println("fic");
+			}
+			
 			if(!NovaBungeeAnnouncer.perms.containsKey(player.getName())){
 				NovaBungeeAnnouncer.perms.put(player.getName(), new ArrayList<String>());
 				NovaBungeeAnnouncer.instance.getPerms(player.getName(), permission);
@@ -188,12 +193,41 @@ public class PlayerMessage {
 		return input;
 	}
 	
+	public static void sendEvent(String eventName, ProxiedPlayer pp){
+
+		if (eventName.equals("onLogin") && NovaBungeeAnnouncer.config.nonannouncements.containsKey("onPlayerJoinSolo") ) {
+			
+			String arg = pp.getName();
+						
+			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get("onLoginSolo");
+			Announcement an = bm.announcement.clone();
+			an.message = an.message.replaceAll("<<1>>", arg);
+
+			PlayerMessage pm = new PlayerMessage(an, pp, bm.permission);
+			pm.checkSendMessage();
+		}	
+		
+		if(NovaBungeeAnnouncer.config.nonannouncements.containsKey(eventName)){
+			
+			String arg = pp.getName();
+			
+			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get(eventName);
+			Announcement an = bm.announcement.clone();
+			an.message = an.message.replaceAll("<<1>>", arg);
+			PlayerMessage.announceAnnouncement(an, "", bm.servers, bm.permission);
+		}
+
+	}
+	
 	public static void sendEvent(String eventName, String arg){
+			
 		if(NovaBungeeAnnouncer.config.nonannouncements.containsKey(eventName)){
 			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get(eventName);
 			Announcement an = bm.announcement.clone();
 			an.message = an.message.replaceAll("<<1>>", arg);
 			PlayerMessage.announceAnnouncement(an, "", bm.servers, bm.permission);
 		}
+		
+
 	}
 }

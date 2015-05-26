@@ -104,7 +104,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 		ArrayList<PlayerMessage> qms = new ArrayList<PlayerMessage>();
 		queue.put(event.getPlayer().getName(), qms);
 		getPerms(event.getPlayer().getName(), "nba.send");
-		PlayerMessage.sendEvent("onLogin", event.getPlayer().getName());
+		PlayerMessage.sendEvent("onLogin", event.getPlayer());
 	}
 
 	@EventHandler
@@ -129,6 +129,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 
 
 	public void load(){
+		
 		try {
 			config.load();
 		} catch (Exception e1) {
@@ -148,6 +149,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 			ArrayList<PlayerMessage> qms = new ArrayList<PlayerMessage>();
 			queue.put(pp.getName(), qms);
 		}
+
 		System.out.println("Length of servers: " + config.servers.size());
 		for(Entry<String, MessageMap> s : config.servers.entrySet()){
 			String serverName = s.getKey();
