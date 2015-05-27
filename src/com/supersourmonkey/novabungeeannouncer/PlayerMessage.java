@@ -196,7 +196,7 @@ public class PlayerMessage {
 	
 	public static void sendEvent(String eventName, ProxiedPlayer pp){
 
-		if (eventName.equals("onLogin") && NovaBungeeAnnouncer.config.nonannouncements.containsKey("onPlayerJoinSolo") ) {
+		if (eventName.equals("onLogin") && NovaBungeeAnnouncer.config.nonannouncements.containsKey("onLoginSolo") ) {
 			
 			String arg = pp.getName();
 						
