@@ -12,6 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -80,11 +81,9 @@ public class PlayerMessage {
 		else if (type.equals("actionbar")){
 			player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(textBuilder(message)));
 		}
-		else if (type.equals("jsonactionbar")){
-			player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-		}
 	}
 	
+
 	public static void announceAnnouncement(Announcement toSay, String serverName, ArrayList<String> servers, String permission){
 		if(serverName.equals("global")||servers!=null&&servers.contains("global")){
 			for(ProxiedPlayer p : ProxyServer.getInstance().getPlayers()){
@@ -132,6 +131,7 @@ public class PlayerMessage {
 
 	public void checkSendMessage(){
 		if(permission!=null && permission.length()>0){
+			
 			if(!NovaBungeeAnnouncer.perms.containsKey(player.getName())){
 				NovaBungeeAnnouncer.perms.put(player.getName(), new ArrayList<String>());
 				NovaBungeeAnnouncer.instance.getPerms(player.getName(), permission);
@@ -156,9 +156,16 @@ public class PlayerMessage {
 		}
 	}
 	
-	public String textBuilder(String input){
+	public BaseComponent[] textBuilder(String input){
+		
 		input = replaceValues(input);
-		String builder = "";
+		
+		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',input));
+		
+		//Removed OldBuilder because it's crappy and did not work for complex ActionBars.
+		//Included for historical reasons
+		
+		/*String builder = "";
 		for(int i = 0; i < input.length(); i++){
 			if(input.charAt(i)!='&')
 				builder+=input.charAt(i);
@@ -179,7 +186,7 @@ public class PlayerMessage {
 			}
 			first = false;
 		}
-		return builder;
+		return builder;*/
 	}
 	
 	public String replaceValues(String input){
@@ -187,12 +194,41 @@ public class PlayerMessage {
 		return input;
 	}
 	
+	public static void sendEvent(String eventName, ProxiedPlayer pp){
+
+		if (eventName.equals("onLogin") && NovaBungeeAnnouncer.config.nonannouncements.containsKey("onLoginSolo") ) {
+			
+			String arg = pp.getName();
+						
+			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get("onLoginSolo");
+			Announcement an = bm.announcement.clone();
+			an.message = an.message.replaceAll("<<1>>", arg);
+
+			PlayerMessage pm = new PlayerMessage(an, pp, bm.permission);
+			pm.checkSendMessage();
+		}	
+		
+		if(NovaBungeeAnnouncer.config.nonannouncements.containsKey(eventName)){
+			
+			String arg = pp.getName();
+			
+			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get(eventName);
+			Announcement an = bm.announcement.clone();
+			an.message = an.message.replaceAll("<<1>>", arg);
+			PlayerMessage.announceAnnouncement(an, "", bm.servers, bm.permission);
+		}
+
+	}
+	
 	public static void sendEvent(String eventName, String arg){
+			
 		if(NovaBungeeAnnouncer.config.nonannouncements.containsKey(eventName)){
 			BroadcastMap bm = NovaBungeeAnnouncer.config.nonannouncements.get(eventName);
 			Announcement an = bm.announcement.clone();
 			an.message = an.message.replaceAll("<<1>>", arg);
 			PlayerMessage.announceAnnouncement(an, "", bm.servers, bm.permission);
 		}
+		
+
 	}
 }

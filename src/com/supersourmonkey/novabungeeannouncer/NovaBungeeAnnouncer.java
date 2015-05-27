@@ -104,7 +104,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 		ArrayList<PlayerMessage> qms = new ArrayList<PlayerMessage>();
 		queue.put(event.getPlayer().getName(), qms);
 		getPerms(event.getPlayer().getName(), "nba.send");
-		PlayerMessage.sendEvent("onLogin", event.getPlayer().getName());
+		PlayerMessage.sendEvent("onLogin", event.getPlayer());
 	}
 
 	@EventHandler
@@ -129,6 +129,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 
 
 	public void load(){
+		
 		try {
 			config.load();
 		} catch (Exception e1) {
@@ -148,6 +149,7 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 			ArrayList<PlayerMessage> qms = new ArrayList<PlayerMessage>();
 			queue.put(pp.getName(), qms);
 		}
+
 		System.out.println("Length of servers: " + config.servers.size());
 		for(Entry<String, MessageMap> s : config.servers.entrySet()){
 			String serverName = s.getKey();
@@ -155,7 +157,15 @@ public class NovaBungeeAnnouncer extends Plugin implements Listener {
 			System.out.println(s.getValue().getRawMap().toString());
 			System.out.println(s.getValue().get("message"));
 			MessageMap serverConfig = s.getValue();
-			ScheduledTask task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName), serverConfig.offset, serverConfig.delay, TimeUnit.SECONDS);
+			//String type = serverConfig.type;
+			ScheduledTask task;
+			if (serverConfig != null && serverConfig.type != null && serverConfig.type.equals("actionbar")) {
+				
+			     task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName, serverConfig.seconds), serverConfig.offset, serverConfig.delay+serverConfig.seconds, TimeUnit.SECONDS);
+			}
+			else {
+				 task = getProxy().getScheduler().schedule(this, new AnnounceMessage(serverConfig, serverName, serverConfig.seconds), serverConfig.offset, serverConfig.delay, TimeUnit.SECONDS);
+			}
 			System.out.println("New task scheduled with offset " + serverConfig.offset + " and delay " + serverConfig.delay);
 			tasks.add(task);
 			if(config.order.equals("random"))

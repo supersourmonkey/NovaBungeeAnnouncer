@@ -31,6 +31,8 @@ public class AnnouncerConfig extends Config {
 		public ArrayList<String> servers;
 		public int offset;
 		public int delay;
+		public int seconds;
+		public String type;
 		public String permission;
 		public ArrayList<Announcement> announcements = new ArrayList<Announcement>();
 	}
